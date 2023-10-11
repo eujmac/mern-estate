@@ -1,15 +1,11 @@
 import express from "express"
 import mongoose from "mongoose"
-import dotenv from "dotenv"
+import "dotenv/config"
 import userRouter from "./routes/user.route.js"
 import authRouter from "./routes/auth.route.js"
 
-dotenv.config()
-
 mongoose
-  .connect(
-    "mongodb+srv://eujmac:eujmac@mern-estate.ocdxhtz.mongodb.net/mern-estate?retryWrites=true&w=majority"
-  )
+  .connect(process.env.MONGO)
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log(`Not connected to MongoDB: Erro: ${err}`))
 
@@ -23,7 +19,7 @@ app.listen(3000, () => {
 app.use("/api/user", userRouter)
 app.use("/api/auth", authRouter)
 
-//middleware
+//middleware that handle errors
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500
   const message = err.message || "Internal Server Error"
