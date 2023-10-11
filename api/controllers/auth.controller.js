@@ -37,7 +37,7 @@ export const signin = async (req, res, next) => {
     // testa se a senha recebida é igual a senha cadastrada
     const validPassword = bcryptjs.compareSync(password, validUser.password)
     // se não achar senha, retorna um erro 404 e mensagem
-    if (!validPassword) return next(errorHandler(401, "Wrong credential!"))
+    if (!validPassword) return next(errorHandler(401, "Wrong credentials!"))
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET)
     const { password: pass, ...rest } = validUser._doc
     res
