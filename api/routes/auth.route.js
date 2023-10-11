@@ -1,10 +1,10 @@
 import express from "express"
-import { test } from "../controllers/user.controller.js"
+import { signup } from "../controllers/auth.controller.js"
 
 const router = express.Router()
 
 // aqui fica todas rotas do usuário sendo chamadas pelo /api/user
 
-router.get("/test", test)
+router.post("/signup", signup)
 
 export default router
