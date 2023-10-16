@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Swiper, SwiperSlide } from "swiper/react"
 import SwiperCore from "swiper"
+import { useSelector } from "react-redux"
 import { Navigation } from "swiper/modules"
 import "swiper/css/bundle"
 import {
@@ -13,19 +14,19 @@ import {
   FaParking,
   FaShare,
 } from "react-icons/fa"
-import { useSelector } from "react-redux"
 import Contact from "../components/Contact"
 
-const Listing = () => {
-  SwiperCore.use([Navigation])
-  const params = useParams()
-  const { currentUser } = useSelector((state) => state.user)
+// https://sabe.io/blog/javascript-format-numbers-commas#:~:text=The%20best%20way%20to%20format,format%20the%20number%20with%20commas.
 
+export default function Listing() {
+  SwiperCore.use([Navigation])
   const [listing, setListing] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
   const [copied, setCopied] = useState(false)
   const [contact, setContact] = useState(false)
+  const params = useParams()
+  const { currentUser } = useSelector((state) => state.user)
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -42,12 +43,13 @@ const Listing = () => {
         setLoading(false)
         setError(false)
       } catch (error) {
-        setLoading(false)
         setError(true)
+        setLoading(false)
       }
     }
     fetchListing()
   }, [params.listingId])
+
   return (
     <main>
       {loading && <p className="text-center my-7 text-2xl">Loading...</p>}
@@ -55,7 +57,7 @@ const Listing = () => {
         <p className="text-center my-7 text-2xl">Something went wrong!</p>
       )}
       {listing && !loading && !error && (
-        <>
+        <div>
           <Swiper navigation>
             {listing.imageUrls.map((url) => (
               <SwiperSlide key={url}>
@@ -69,7 +71,6 @@ const Listing = () => {
               </SwiperSlide>
             ))}
           </Swiper>
-
           <div className="fixed top-[13%] right-[3%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-slate-100 cursor-pointer">
             <FaShare
               className="text-slate-500"
@@ -105,7 +106,7 @@ const Listing = () => {
               </p>
               {listing.offer && (
                 <p className="bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md">
-                  ${+listing.regularPrice - +listing.discountPrice} off
+                  ${+listing.regularPrice - +listing.discountPrice} OFF
                 </p>
               )}
             </div>
@@ -138,17 +139,15 @@ const Listing = () => {
             {currentUser && listing.userRef !== currentUser._id && !contact && (
               <button
                 onClick={() => setContact(true)}
-                className="bg-slate-700 text-white rounded-lg uppercase p-3 hover:opacity-90"
+                className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3"
               >
                 Contact landlord
               </button>
             )}
             {contact && <Contact listing={listing} />}
           </div>
-        </>
+        </div>
       )}
     </main>
   )
 }
-
-export default Listing
